@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko"> 
+<head>
+<meta charset="utf-8" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" type="text/css" href="/w/css/common.css?170213">
+<link rel="stylesheet" type="text/css" href="/w/css/sharing.css?170213">
+<link rel="stylesheet" type="text/css" href="/w/css/keypad/keypad.css?170726">
+<script type="text/javascript" src="/w/js/jquery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/w/js/ui/common.js"></script>
+<title>우리끼리</title>
+</head>
+<style>
+
+</style>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<div class="s_header">
+			<li class="title"><span><img src="/w/img/common/s_top_close.jpg"></span><i>쏘시오 간편결제</i></li>
+		</div>
+	</div>
+	<div class="easyservicecontianer">
+		
+		<ul class="addui_footer">
+			<li class="btn">시작하기</li>    
+		</ul>
+	</div>
+</div>
+
+
+<!-- <div id="dynamic_wrap">
+
+	<div id="dynamic_header">
+		<div class="f_header">
+			<li class="title"><span><img src="/w/img/keypad_common/close_icon.png"></span><i>쏘시오 간편결제</i></li>
+		</div>
+	</div>
+	<div id="cont_AuthView" class="dynamic_contianer" style="">
+		<div class="AuthView_top_nav">
+			<ul>
+				<li class="termAgree_icon active">이용</li>
+				<li class="card_icon">카드</li>
+				<li class="secureKeypad_icon">비밀</li>
+			</ul>
+		</div>
+		<div id="cont_termAgreeView" class="cont_subView" style="display: none; height: 449px; top: 52px;">
+			
+		</div>
+		<div id="cont_cardRegist" class="cont_subView" style="display: none; height: 449px; top: 52px; left: 320px;"></div>
+		<div id="cont_secureKeypadView" class="cont_subView" style="display: block;">
+			<ul class="tab_cont_title maintxt_inf">
+				<li class="icon"><img src="/w/img/keypad_common/security_b_icon.png" alert="비밀번호"></li>
+				<li class="title">결제 비밀번호 설정</li>
+				<li class="sub_txt">결제 및 쏘시오 간편결제 정보 수정 시<br/>사용할 비밀번호를 설정해주세요</li>
+			</ul>
+			<div class="keypad_form">
+				<ul>
+					<li><span></span></li>
+					<li><span></span></li>
+					<li><span></span></li>
+					<li><span></span></li>
+					<li><span></span></li>
+					<li><span></span></li>
+				</ul>
+			</div>
+			<ul class="tab_cont_title subtxt_inf">
+				<li class="sub_txt">안전한 사용을 위해 동일한 숫자 4개 이상, 연속되는<br/> 숫자 4자리 이상 생년월일과 휴대폰 번호와 동일한 숫자는</li>
+			</ul>
+			<div class="keypad_num">
+				<ul>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="key_a"><span class="key_b"></span></li>
+					<li class="del_arrow"><span class="disabled"></span></li>
+					<li class="btn_skip"><a href="#;" class="btn_del">전체삭제</a></li>
+				</ul>
+				<input type="hidden" id="hidFindCodeCnt" name="hidFindCodeCnt" value="1">
+			</div>
+
+		</div>
+	</div>
+
+</div> -->
+
+<div class="iframelytype"></div>
+
+
+<style type="text/css">
+
+</style>
+<script>
+$(document).ready(function(){
+
+	$('.btn').click(function(){
+		dynamicUI.easypaymentinfancyUI();
+		dynamicUI.startView();
+	})
+})
+
+$(function(){
+	
+
+});	
+
+
+var dynamicUI = {
+	easypaymentinfancyUI : function (){//최초 html 그리기
+		if($('#dynamic_wrap').html() != null && $('#dynamic_wrap').html() != '' && $('#dynamic_wrap').html() != undefined) {
+			$('#dynamic_wrap').remove();
+		}
+		var html = '';
+		html += '<style></style>'
+		html += '<div id="dynamic_wrap" style="display:none">';
+		html += '   <div id="dynamic_header"><div class="f_header">';
+		html += '      <li class="title">';
+		html += '         <span><img src="/w/img/keypad_common/close_icon.png"></span>';
+		html += '         <i>쏘시오 간편결제</i></li>';
+		html += '      </li>';
+		html += '   </div>';
+		html += '</div>';
+		html += '<div id="cont_startView" class="dynamic_contianer" style="display:none"></div>';//처음 시작 view
+		html += '<div id="cont_realNameAuthView" class="dynamic_contianer" style="display:none"></div>';//실명인증 View
+		html += '<div id="cont_AuthView" class="dynamic_contianer" style="display:none">';//3depth start
+		html += '   <div class="AuthView_top_nav"><ul>';
+		html += '      <li class="termAgree_icon">이용</li>';
+		html += '      <li class="card_icon">카드</li>';
+		html += '      <li class="secureKeypad_icon">비밀</li>';
+		html += '   </ula></div>';
+		html += '   <div id="cont_termAgreeView" class="cont_subView"></div>';//약관동의 view
+		html += '   <div id="cont_cardRegist" class="cont_subView"></div>';//카드 정보 등록 View
+		html += '   <div id="cont_secureKeypadView" class="cont_subView"></div>';//결제 비밀번호 등록 View
+		html += '</div>';//3depth end
+		html += '<div id="cont_easypaymentsuccessView" class="dynamic_contianer" style="display:none"></div>';//간편결제 등록 완료 View
+		html += '</div>';
+		$('body').prepend(html);
+
+		$('#wrap').hide();
+		$('#dynamic_wrap').show();
+		
+	},
+
+   //처음 시작 view
+   startView : function() {
+		console.log('dynamicUI.startView');
+		$('.dynamic_contianer').hide();//시작시 dynamic_contianer숨김
+		$('#cont_startView').show();//그중 해당 아이디만 show
+		var html = '';
+		html += '<div class="addservicecont">';
+
+		html += '<div class="easypayment_dlbox first_title_box">';
+		html += '<li class="title">쏘시오 간편결제</li>';
+		html += '<li class="sub_txt1">10초면 결제끝!<br/>한번의 결제정보 입력으로<br/>안전하고 간편하게 거래 할 수 있습니다</li>';
+		html += '<li class="last_bottom_line"></li>';
+		html += '</div>';
+		html += '<div class="easypayment_dlbox">';
+		html += '<li class="icon"><img src="/w/img/keypad_common/card_w_icon.png" alert="카드"></li>';
+		html += '<li class="title">NO 카드 번호</li>';
+		html += '<li class="sub_txt1">카드 번호는 한번만 입력하세요</li>';
+		html += '</div>';
+		html += '<div class="easypayment_dlbox">';
+		html += '<li class="icon"><img src="/w/img/keypad_common/phone_w_icon.png" alert="카드"></li>';
+		html += '<li class="title">NO APP</li>';
+		html += '<li class="sub_txt1">별도의 앱이 필요 없습니다</li>';
+		html += '</div>';
+		html += '<div class="easypayment_dlbox">';
+		html += '<li class="icon"><img src="/w/img/keypad_common/finger_w_icon.png" alert="카드"></li>';
+		html += '<li class="title typeB">ONE TOUCH</li>';
+		html += '<li class="sub_txt1">비밀번호 입력으로 결제 끝!</li>';
+		html += '</div>';
+		html += '</div>';
+		html += '<ul class="addui_footer">';
+		html += '<li class="btn active">시작하기</li>';
+		html += '</ul>';
+		$('#cont_startView').html(html);
+
+		var imagesArray = ["r_serviceimg1", "r_serviceimg2","r_serviceimg3"];//시작 페이지 bg 랜덤 이미지 관련
+		var num = Math.floor(Math.random() * 3);
+
+		setTimeout(function(){//안내 컨텐츠의 화면 중앙 정렬 관련
+			var nuym_h = 0;//easypayment_dlbox 높이값
+			var dlboxLength = 0;//easypayment_dlbox 갯수
+			addservicecontHeight = $('#cont_startView .addservicecont').height();
+			$('#cont_startView .addservicecont .easypayment_dlbox').each(function(){
+				nuym_h += $(this).height();
+				dlboxLength = $('#cont_startView .addservicecont .easypayment_dlbox').length;
+			})
+			maxdlboxLength = dlboxLength*10;
+			addservicecontPaTop = addservicecontHeight - (nuym_h + maxdlboxLength);
+			if(addservicecontHeight > nuym_h){
+				//계산 공식 addservicecont의 높이값 - ( 각각easypayment_dlbox 높이더한값 + {easypayment_dlbox갯수 * easypayment_dlbox마진값} )/2
+				$('#cont_startView .addservicecont').css('padding-top',addservicecontPaTop/2);
+			} else {//addservicecont의 높이값 값이 각각easypayment_dlbox 높이더한값 보다 작을때
+				$('#cont_startView .addservicecont').css('padding','10px 0px');
+			}
+		}, 500);
+		// 해당 컨텐츠 addservicecont의 높이값 계산 공식 = 브라우져 높이값 - ( #dynamic_header높이값 + 해당 컨텐츠 addui_footer 높이값 + addui_footer 패딩 값) 
+		$('#cont_startView .addservicecont').css({'height': window.innerHeight-($('#dynamic_header').height()+$('#cont_startView .addui_footer').height()+40),'background-image':'url(/w/img/keypad_common/'+imagesArray[num]+'.png)'});
+
+		$('#cont_startView .btn').unbind('click').bind('click', function() {//단순 클릭 실행
+			dynamicUI.realNameAuthView();
+		});
+   },
+
+   //실명인증 View
+   realNameAuthView : function() {
+		console.log('dynamicUI.realNameAuthView');
+		$('.dynamic_contianer').hide();
+		$('#cont_realNameAuthView').show();
+		var html = '';
+		html += '<div class="addservicecont easypayment_tbl">';
+		html += '<ul>';
+		html += '<li class="icon"><img src="/w/img/keypad_common/certification_icon.png"></li>';
+		html += '<li class="title">실명인증이 필요합니다</li>';
+		html += '<li class="sub_txt">쏘시오 간편결제를 이용하기 위해서<br/>쏘시오 실명인증이 필요합니다.<br/>본인 명의의 휴대폰으로 인증해 주세요.</li>';
+		html += '</ul>';
+		html += '</div>';
+		html += '<ul class="addui_footer">';
+		html += '<li class="input_num"><input type="number" name="cellPhone" id="cellPhone" placeholder="휴대폰 번호를 입력 하세요(숫자)" maxlength="11" oninput="dynamicUI.maxLengthCheck(this)"/></li>';//input type='number' 일때 maxlength event
+		html += '<li class="btn">실명 인증하기</li>';
+		html += '</ul>';
+
+		$('#cont_realNameAuthView').html(html);
+		// 해당 컨텐츠 addservicecont의 높이값 계산 공식 = 브라우져 높이값 - ( #dynamic_header높이값 + 해당 컨텐츠 addui_footer 높이값 + addui_footer 패딩 값) 
+		$('#cont_realNameAuthView .addservicecont').css({'height': window.innerHeight-($('#dynamic_header').height()+$('#cont_realNameAuthView .addui_footer').height()+40)});
+
+		$('#cont_realNameAuthView .btn').unbind('click').bind('click', function() {//단순 클릭 실행
+			dynamicUI.termAgreeView();
+		});
+   },
+
+	// 실명인증 input type='number' 일때 maxlength 인식하지 못하는 브라우져 대응
+	maxLengthCheck : function(object){
+		if (object.value.length >= object.maxLength){
+			object.value = object.value.slice(0, object.maxLength);
+			$('.addui_footer .btn').addClass('active');
+		} else {
+			$('.addui_footer .btn').removeClass('active');
+		}
+	},
+
+   //약관동의 view
+   termAgreeView : function() {//3depth 컨텐츠 시작
+		console.log('dynamicUI.termAgreeView');
+
+		$('.dynamic_contianer').hide();
+		$('#cont_AuthView').show();
+		$('.cont_subView').hide();
+		$('#cont_termAgreeView').show();
+		$('#dynamic_wrap .dynamic_contianer .AuthView_top_nav li').removeClass('active');
+		$('.termAgree_icon').addClass('active');
+
+		$('.dynamic_contianer').css('height',window.innerHeight-$('#dynamic_header').height())//브라우저 높이 값 - #dynamic_header 높이값
+		//브라우져 높이값 - (height : #dynamic_header 높이값 + .AuthView_top_nav 높이값 + AuthView_top_nav 패딩값,top : .AuthView_top_nav 높이값 + AuthView_top_nav 패딩값) 
+		$('.cont_subView').css({'height': window.innerHeight- ($('#dynamic_header').height()+$('.AuthView_top_nav').height() + 40),'top':$('.AuthView_top_nav').height()+40});
+
+		$('.cont_subView').not('#cont_termAgreeView').css({//컨텐츠 애니 이벤트
+			'left':window.innerWidth
+		});
+
+		var html = '';
+		html += '<div class="cont_subView_integrat">';
+		html += '<ul class="tab_cont_title">';
+		html += '<li class="icon"><img src="/w/img/keypad_common/check_b_icon.png" alert="카드"></li>';
+		html += '<li class="title">이용약관동의</li>';
+		html += '<li class="sub_txt">쏘시오 간편결제 이용에 필요한 약관에 동의해 주세요</li>';
+		html += '</ul>';
+		html += '<ul class="tab_cont_linebox">';
+		html += '<li><span class="dynamic_custom_input"><input type="checkbox" id="all_check" name="all_check_btn"><label for="all_check">모든 약관에 동의 합니다</label></span></li>';
+		html += '<li><span class="dynamic_custom_input"><input type="checkbox" id="category_1" name="terms"><label for="category_1">전자금융거래 이용약관동의</label></span><span id="terms1" class="more">상세보기</span></li>';
+		html += '<li><span class="dynamic_custom_input"><input type="checkbox" id="category_2" name="terms"><label for="category_2">개인정보 수집 및 이용 동의</label></span><span id="terms2" class="more">상세보기</span></li>';
+		html += '<li><span class="dynamic_custom_input"><input type="checkbox" id="category_3" name="terms"><label for="category_3">개인정보 제공 및 위탁 동의</label></span><span id="terms3" class="more">상세보기</span></li>';
+		html += '</ul>';
+		html += '<ul class="tab_cont_title subtxt">';
+		html += '<li class="sub_txt">쏘시오 간편결제는 (주)다날의 <span class="nuderline">다날페이카드</span> 결제 모듈을<br/>이용하여 안전하게 제공됩니다</li>';
+		html += '</ul>';
+		html += '</div>';
+		html += '<ul class="addui_footer">';
+		html += '<li class="btn">다음</li>';
+		html += '</ul>';
+		$('#cont_termAgreeView').html(html);
+
+		$('.cont_subView_integrat').css('height', $('.cont_subView').height() - ($('#cont_termAgreeView .addui_footer').height()+40))
+
+		$(".tab_cont_linebox input").click(function(){//input 클릭시 이벤트 시작
+			var input_length = '';//이용약관 갯수
+			var inputchecked_length = '';//체크된 이용약관 갯수
+
+			$(".tab_cont_linebox  input[name=terms]").each(function() {
+				input_length = $("input[name=terms]").length;
+			});
+			$(".tab_cont_linebox  input[name=terms]:checked").each(function() {
+				inputchecked_length = $(".tab_cont_linebox  input[name=terms]:checked").length;
+			});
+
+			if( $(this).attr('id') == 'all_check'){//클릭한 인풋 확인
+				if($(".tab_cont_linebox  #all_check").prop("checked")){
+					$(".tab_cont_linebox  input[name=terms]").prop("checked",true);
+					$('.addui_footer .btn').addClass('active');
+				}else{
+					$(".tab_cont_linebox  input[name=terms]").prop("checked",false);
+					$('.addui_footer .btn').removeClass('active');
+				}
+			} else {
+				if (input_length != inputchecked_length){//이용약관 갯수와 체크된 이용약관 갯수가 다르면 .btn / removeClass('active');
+					$(".tab_cont_linebox #all_check").prop("checked",false);
+					$('.addui_footer .btn').removeClass('active');
+				} else {
+					$(".tab_cont_linebox #all_check").prop("checked",true);
+					$('.addui_footer .btn').addClass('active');
+				}
+			}
+		})
+
+		$('.tab_cont_linebox li .more').unbind('click').bind('click', function() {//.more 의 id 값확인 
+			var thisTermsofuse = $(this).attr('id');
+			dynamicUI.easypayment_ly_open(thisTermsofuse);
+		});
+
+		$('#cont_termAgreeView .btn').unbind('click').bind('click', function() {//단순 클릭 실행
+			dynamicUI.cardRegist();
+		});
+
+   },
+
+	//이용약관 전용 레이어팝업
+	easypayment_ly_open : function(name){
+		if($('.easypayment_ly').html() != null && $('.easypayment_ly').html() != '' && $('.easypayment_ly').html() != undefined) {//중복 일경우 대비
+			$('.easypayment_ly').remove();
+		}
+		var s = name;
+		var result = s.replace('#', '');
+
+		var html = '';
+		html += '<div id="'+name+'" class="easypayment_ly">';
+		html += '<div class="easypayment_ly_contents">';
+		html += '<li class="easypayment_ly_close"><img src="/w/img/keypad_common/close_icon.png"></li>';
+		if ( name == 'terms1'){//id 값으로 확인후
+			html += '<li class="easypayment_ly_title">전자금융거래 이용약관</li>';
+		} else if ( name == 'terms2') {
+			html += '<li class="easypayment_ly_title">개인정보 수집 및 이용 동의</li>';
+		} else {
+			html += '<li class="easypayment_ly_title">개인정보 제공 및 위탁 동의</li>';
+		}
+
+		html += '<div class="easypayment_con">';
+		if ( name == 'terms1'){
+			html += '<li>전자금융거래 이용약관동의<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/></li>';
+		} else if ( name == 'terms2') {
+			html += '<li>개인정보 수집 및 이용 동의<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/></li>';
+		} else {
+			html += '<li>개인정보 제공 및 위탁 동의<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/>내용<br/></li>';
+		}
+
+		html += '</div>';
+		html += '</div>';
+		html += '<div class="ly_bg"></div>';
+		html += '</div>';
+		$('body').prepend(html);
+		$('#'+name).show();
+
+		$('.easypayment_ly_contents').css({'width': window.innerWidth - 40,'height':window.innerHeight-$('#dynamic_header').height()-30 ,'margin-left': -(window.innerWidth - 40) / 2,'top':$('#dynamic_header').height()})
+		$('.easypayment_con').css('height', $('.easypayment_ly_contents').height() - ($('.easypayment_ly_close').height() + $('.easypayment_ly_title').height()+50) );
+
+		$('#'+name+' .easypayment_ly_contents .easypayment_ly_close').unbind('click').bind('click', function() {
+			$('#'+name).hide();
+		})
+	},
+
+	//카드 정보 등록 View
+	cardRegist : function(typeConfirm) {
+		console.log('dynamicUI.cardRegist');
+		$('#cont_cardRegist').show();
+		$('#cont_termAgreeView').animate({
+		left: -window.innerWidth
+		});
+		$('#cont_cardRegist').animate({
+		left: "0",
+		});
+
+		$('#dynamic_wrap .dynamic_contianer .AuthView_top_nav li').removeClass('active');
+		$('.card_icon').addClass('active');
+		
+		if( typeConfirm == 'typeA'){
+			console.log('typeA');
+			$('#cont_AuthView').show();
+			$('#cont_AuthView .cont_subView').hide();//시작시 cont_subView
+			$('#cont_cardRegist').show();//그중 해당 아이디만 show
+
+			$('.dynamic_contianer').css('height',window.innerHeight-$('#dynamic_header').height())
+			$('.cont_subView').css('height',window.innerHeight-$('#dynamic_header').height())
+			$('.AuthView_top_nav, .tab_cont_title').remove();
+		}
+
+		var html = '';
+		html += '<div class="cont_subView_iframetype">';
+
+		if( typeConfirm != 'typeA'){
+			html += '<ul class="tab_cont_title">';
+			html += '<li class="icon"><img src="/w/img/keypad_common/card_b_icon.png" alert="카드"></li>';
+			html += '<li class="title">카드등록</li>';
+			html += '</ul>';
+		}
+
+		html += '<ul class="iframetype_cont">';
+		html += '<li>아이프레임 영역</li>';
+		html += '</ul>';
+		html += '</div>';
+		$('#cont_cardRegist').html(html);
+		$('.cont_subView_iframetype').css('height', $('#cont_cardRegist.cont_subView').height());
+		setTimeout(function(){//키보드 Ui 관련
+			$('.iframetype_cont').css('height', $('#cont_cardRegist .cont_subView_iframetype').height() - $('#cont_cardRegist .tab_cont_title').height());
+		}, 500);
+		
+		$('#cont_cardRegist .icon').unbind('click').bind('click', function() {//단순 클릭 실행
+			dynamicUI.secureKeypadView();
+		});
+	},
+
+	//결제 비밀번호 등록 View
+	secureKeypadView : function() {
+		console.log('dynamicUI.secureKeypadView');
+		$('#cont_secureKeypadView').show();
+
+
+		$('#cont_cardRegist').animate({
+			left: -window.innerWidth,
+		});
+		$('#cont_secureKeypadView').animate({
+			left: "0",
+		});
+		$('#dynamic_wrap .dynamic_contianer .AuthView_top_nav li').removeClass('active');
+		$('.secureKeypad_icon').addClass('active');
+
+		var html = '';
+		html += '<ul class="tab_cont_title maintxt_inf">';
+		html += '<li class="icon"><img src="/w/img/keypad_common/security_b_icon.png" alert="비밀번호"></li>';
+		html += '<li class="title">결제 비밀번호 설정</li>';
+		html += '<li class="sub_txt">결제 및 쏘시오 간편결제 정보 수정 시<br/>사용할 비밀번호를 설정해주세요</li>';
+		html += '</ul>';
+		html += '<div class="keypad_form">';
+		html += '<ul>';
+		html += '<li><span></span></li>';
+		html += '<li><span></span></li>';
+		html += '<li><span></span></li>';
+		html += '<li><span></span></li>';
+		html += '<li><span></span></li>';
+		html += '<li><span></span></li>';
+		html += '</ul>';
+		html += '</div>';
+		html += '<ul class="tab_cont_title subtxt_inf">';
+		html += '<li class="sub_txt">안전한 사용을 위해 동일한 숫자 4개 이상, 연속되는<br/> 숫자 4자리 이상 생년월일과 휴대폰 번호와 동일한 숫자는</li>';
+		html += '</ul>';
+		html += '<div class="keypad_num">';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="key_a"><span class="key_b"></span></li>';
+		html += '<li class="del_arrow"><span class="disabled"></span></li>';
+		html += '<li class="btn_skip"><a href="#;" class="btn_del">전체삭제</a></li>';
+		html += '</ul>';
+		html += '<input type="hidden" id="hidFindCodeCnt" name="hidFindCodeCnt" value="1">';
+		html += '</div>';
+
+		$('#cont_secureKeypadView').html(html);
+		$('.dynamic_contianer').css('height',window.innerHeight-$('#dynamic_header').height())
+		$('#cont_secureKeypadView').css({'height': window.innerHeight- ($('#dynamic_header').height()+$('.AuthView_top_nav').height() + 40),'top':$('.AuthView_top_nav').height()+40});
+
+		setTimeout(function(){//키보드 Ui 관련
+			var keypad_formpt_h = $('#cont_secureKeypadView').height()-( $('#cont_secureKeypadView .maintxt_inf').height()+$('#cont_secureKeypadView .subtxt_inf').height()+20+$('#cont_secureKeypadView .keypad_num').height()+$('#cont_secureKeypadView .keypad_form').height())
+			console.log(keypad_formpt_h,  $('#cont_secureKeypadView').height(), $('#cont_secureKeypadView .maintxt_inf').height(), $('#cont_secureKeypadView .subtxt_inf').height(), $('#cont_secureKeypadView .keypad_num').height())
+			$('.keypad_form').css({'padding-top':keypad_formpt_h/2,'padding-bottom':keypad_formpt_h/2})
+		}, 500);
+
+		//키보드 이벤트 star
+		$('.disabled').addClass('on');
+		var chk = $('.keypad_num li.key_a');
+
+		chk.on('click', function(){
+			$(this).css('background-color','#c1c1c1');
+			for(var i = 0;i < 3;i++){
+				var result = Math.floor(Math.random() * 12) + 1;
+				chk.eq(result).css('background-color','#c1c1c1');
+			};
+			setTimeout(function(){
+				$('.keypad_num li').removeAttr('style');
+			}, 100);
+
+			var count = $("#hidFindCodeCnt").val();
+			if(count <= 6){
+				$('.keypad_form li:nth-child('+count+') span').addClass('on');
+				$("#hidFindCodeCnt").val(parseInt($("#hidFindCodeCnt").val()) + 1);
+				switch (count) {
+					case "6":
+						$('.disabled').removeClass('on');
+						break;
+				}
+			}
+		});
+		var del = $('.keypad_num li.del_arrow');
+		del.on('click', function(e){
+			$('.disabled').addClass('on');
+			var count = "" + (parseInt($("#hidFindCodeCnt").val()) - 1);		
+			switch (count) {
+				case "0":
+					return;
+			}
+			$('.keypad_form li:nth-child('+count+') span').removeClass('on');
+			$("#hidFindCodeCnt").val(parseInt($("#hidFindCodeCnt").val()) - 1);
+			e.preventDefault();
+		});
+		var del2 = $('.keypad_num li.btn_skip');
+		del2.on('click', function(e){
+			var count = "" + (parseInt($("#hidFindCodeCnt").val()) - 1);
+			for(var i = 0;i <= count;i++){
+				$('.keypad_form li:nth-child('+i+') span').removeClass('on');
+			}
+			$("#hidFindCodeCnt").val(parseInt($("#hidFindCodeCnt").val()) - count);
+		});
+
+		$('.icon').unbind('click').bind('click', function() {//단순 클릭 실행
+			dynamicUI.easypaymentsuccessView('enrollment');
+		});
+		//키보드 이벤트 end
+	},
+
+   //간편결제 등록 완료 View
+   easypaymentsuccessView : function(Confirm) {
+      console.log('dynamicUI.easypaymentsuccessView');
+      $('.dynamic_contianer').hide();
+      $('.cont_subView').removeAttr('style');
+      $('#cont_easypaymentsuccessView').show();
+      var html = '';
+      var html = '';
+		html += '<div class="addservicecont easypayment_tbl">';
+		html += '<ul>';
+		html += '<li class="icon"><img src="/w/img/keypad_common/cardadd_success_icon.png"></li>';
+		html += '<li class="title">쏘시오 간편결제 서비스 등록이<br/>완료 되었습니다</li>';
+		if ( Confirm == 'enrollment'){
+			html += '<li class="sub_txt">다양한 상품을 만나 보세요</li>';
+		} else {
+			html += '<li class="sub_txt">상품 결제를 계속 진행합니다</li>';
+		}
+
+		html += '</ul>';
+		html += '</div>';
+		html += '<ul class="addui_footer">';
+		if ( Confirm == 'enrollment'){
+			html += '<li class="btn active">확인</li>';
+		} else {
+			html += '<li class="btn active">상품 결제하기</li>';
+		}
+		html += '</ul>';
+
+		$('#cont_easypaymentsuccessView').html(html);
+
+		$('#cont_easypaymentsuccessView .addservicecont').css({'height': window.innerHeight-($('#dynamic_header').height()+$('#cont_easypaymentsuccessView .addui_footer').height()+40)})
+
+      $('.active').unbind('click').bind('click', function() {//단순 클릭 실행
+            dynamicUI.easypayment_UI_end()
+      });
+   },
+   //최종 닫기 이벤트
+   easypayment_UI_end : function(){
+	   //현재 생성한 UI는 삭제하지 않고 숨김처리로 해놓음
+	   $('#wrap').show();
+	   $('#dynamic_wrap').hide();
+	   $('.dynamic_contianer').removeAttr('style');
+	} 
+}
+
+
+</script>
+
+</body>
+</html>
